@@ -1,0 +1,83 @@
+replicaCount: 1
+image:
+  repository: artifactory-jcr.infra:30000/docker-local/com.optimagrowth/organization-service
+  pullPolicy: Always
+  tag: 0.0.1-SNAPSHOT
+imagePullSecrets: []
+nameOverride: ''
+fullnameOverride: ''
+serviceAccount:
+  create: false
+  automount: true
+  annotations: {}
+  name: ''
+podAnnotations: {}
+podLabels: {}
+podSecurityContext: {}
+securityContext: {}
+service:
+  type: ClusterIP
+  port: 8080
+ingress:
+  enabled: false
+  className: ''
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+resources: {}
+livenessProbe:
+  httpGet:
+    path: /actuator/health/liveness
+    port: 8080
+  failureThreshold: 5
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+readinessProbe:
+  httpGet:
+    path: /actuator/health/readiness
+    port: 8080
+  failureThreshold: 5
+  initialDelaySeconds: 10
+  periodSeconds: 10
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+volumes:
+  - secret:
+      secretName: postgres
+    name: postgres
+  - configMap:
+      name: keycloak
+    name: keycloak
+volumeMounts:
+  - name: postgres
+    mountPath: /run/secrets/postgres
+    readOnly: true
+  - name: keycloak
+    mountPath: /run/configs/keycloak
+    readOnly: true
+nodeSelector: {}
+tolerations: []
+affinity: {}
+env:
+  - name: SPRING_PROFILES_ACTIVE
+    value: dev
+  - name: SPRING_CLOUD_CONFIG_URI
+    value: http://config-service:8080
+  - name: EUREKA_URI
+    value: http://eureka-service:8080/eureka
+  - name: JWT_ISSUER_URI_FILE
+    value: /run/configs/keycloak/jwt-issuer-uri
+  - name: DATASOURCE_URL_FILE
+    value: /run/secrets/postgres/url
+  - name: DATASOURCE_USERNAME_FILE
+    value: /run/secrets/postgres/user
+  - name: DATASOURCE_PASSWORD_FILE
+    value: /run/secrets/postgres/password
