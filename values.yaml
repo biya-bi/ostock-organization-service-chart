@@ -1,6 +1,6 @@
 replicaCount: 1
 image:
-  repository: artifactory-jcr.infra:30000/docker-local/com.optimagrowth/organization-service
+  repository: artifactory-jcr.infra/docker-local/com.optimagrowth/organization-service
   pullPolicy: Always
   tag: 0.0.1-SNAPSHOT
 imagePullSecrets: []
