@@ -68,7 +68,7 @@ tolerations: []
 affinity: {}
 env:
   - name: SPRING_PROFILES_ACTIVE
-    value: dev
+    value: default
   - name: SPRING_CLOUD_CONFIG_URI
     value: http://config-service:8080
   - name: EUREKA_URI
